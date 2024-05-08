@@ -6,7 +6,7 @@ arg_list = [arg for arg in sys.argv]
 
 
 def create_directory(directory: str) -> None:
-    full_path = f"{os.getcwd()}/{directory}"
+    full_path = os.path.join(os.getcwd(), directory)
     if not os.path.exists(full_path):
         os.makedirs(full_path)
 
@@ -29,16 +29,17 @@ def create_file(name_of_file: str) -> None:
 if "-d" in arg_list and "-f" in arg_list:
 
     if arg_list.index("-d") < arg_list.index("-f"):
-        path = ("/".join(
-            arg for arg in
-            arg_list[arg_list.index("-d") + 1:arg_list.index("-f")]
-        ))
-        file_name = f"{os.getcwd()}/{path}/{arg_list[-1]}"
+        args = arg_list[arg_list.index("-d") + 1:arg_list.index("-f")]
+        path = os.path.join(*args)
+        file_name = os.path.join(os.getcwd(), path, arg_list[-1])
 
     else:
-        path = "/".join(arg for arg in arg_list[arg_list.index("-d") + 1::])
-        file_name = (
-            f"{os.getcwd()}/{path}/{arg_list[arg_list.index('-f') + 1]}"
+        args = arg_list[arg_list.index("-d") + 1::]
+        path = os.path.join(*args)
+        file_name = os.path.join(
+            os.getcwd(),
+            path,
+            arg_list[arg_list.index("-f") + 1]
         )
 
     create_directory(path)
@@ -46,10 +47,11 @@ if "-d" in arg_list and "-f" in arg_list:
 
 
 elif "-d" in arg_list:
-    path = "/".join(arg for arg in arg_list[arg_list.index("-d") + 1::])
+    args = arg_list[arg_list.index("-d") + 1::]
+    path = os.path.join(*args)
     create_directory(path)
 
 
 elif "-f" in arg_list:
-    file_name = f"{os.getcwd()}/{arg_list[-1]}"
+    file_name = os.path.join(os.getcwd(), arg_list[-1])
     create_file(file_name)
