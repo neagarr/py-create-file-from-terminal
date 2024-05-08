@@ -14,7 +14,6 @@ def create_directory(directory: str) -> None:
 def create_file(name_of_file: str) -> None:
     with open(name_of_file, "a") as new_file:
         line_number = 1
-
         new_file.write(
             f"\n{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n"
         )
@@ -28,10 +27,19 @@ def create_file(name_of_file: str) -> None:
 
 
 if "-d" in arg_list and "-f" in arg_list:
-    path = "/".join(
-        arg for arg in arg_list[arg_list.index("-d") + 1: arg_list.index("-f")]
-    )
-    file_name = f"{os.getcwd()}/{path}/{arg_list[-1]}"
+
+    if arg_list.index("-d") < arg_list.index("-f"):
+        path = ("/".join(
+            arg for arg in
+            arg_list[arg_list.index("-d") + 1:arg_list.index("-f")]
+        ))
+        file_name = f"{os.getcwd()}/{path}/{arg_list[-1]}"
+
+    else:
+        path = "/".join(arg for arg in arg_list[arg_list.index("-d") + 1::])
+        file_name = (
+            f"{os.getcwd()}/{path}/{arg_list[arg_list.index('-f') + 1]}"
+        )
 
     create_directory(path)
     create_file(file_name)
@@ -44,5 +52,4 @@ elif "-d" in arg_list:
 
 elif "-f" in arg_list:
     file_name = f"{os.getcwd()}/{arg_list[-1]}"
-
     create_file(file_name)
