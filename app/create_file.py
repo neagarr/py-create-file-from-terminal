@@ -5,10 +5,11 @@ import datetime
 arg_list = [arg for arg in sys.argv]
 
 
-def create_directory(directory: str) -> None:
-    full_path = os.path.join(os.getcwd(), directory)
+def create_directory(arguments: list) -> str:
+    full_path = os.path.join(os.getcwd(), *arguments)
     if not os.path.exists(full_path):
         os.makedirs(full_path)
+    return full_path
 
 
 def create_file(name_of_file: str) -> None:
@@ -30,26 +31,20 @@ if "-d" in arg_list and "-f" in arg_list:
 
     if arg_list.index("-d") < arg_list.index("-f"):
         args = arg_list[arg_list.index("-d") + 1:arg_list.index("-f")]
-        path = os.path.join(*args)
-        file_name = os.path.join(os.getcwd(), path, arg_list[-1])
+        file_name = os.path.join(create_directory(args), arg_list[-1])
 
     else:
         args = arg_list[arg_list.index("-d") + 1::]
-        path = os.path.join(*args)
         file_name = os.path.join(
-            os.getcwd(),
-            path,
+            create_directory(args),
             arg_list[arg_list.index("-f") + 1]
         )
-
-    create_directory(path)
     create_file(file_name)
 
 
 elif "-d" in arg_list:
     args = arg_list[arg_list.index("-d") + 1::]
-    path = os.path.join(*args)
-    create_directory(path)
+    create_directory(args)
 
 
 elif "-f" in arg_list:
